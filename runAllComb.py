@@ -21,13 +21,13 @@ import warnings
 def main():
 
     #Command line arguments 
-    kappa = sys.argv[0]
-    immune_microbial_load = sys.argv[1]
-    immuneResponse = sys.argv[2]
-    change_kappa = sys.argv[2]
-    repeats = sys.argv[3]
-    new_kappa = sys.argv[4]
-    path_to_save = sys.argv[5]
+    kappa = sys.argv[1]
+    immune_microbial_load = sys.argv[2]
+    immuneResponse = sys.argv[3]
+    change_kappa = sys.argv[4]
+    repeats = sys.argv[5]
+    new_kappa = sys.argv[6]
+    path_to_save = sys.argv[7]
 
     #repeats = 5
     #path_to_save = '/Users/eemanabbasi/Desktop/Comm_Dynamics_Results' 
