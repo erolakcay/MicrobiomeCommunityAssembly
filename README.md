@@ -11,7 +11,7 @@ The "runAllComb.py" script can be run on command line and takes in seven command
 3. Immune response (boolean) = True/False
 4. Change kappa (boolean) = True/False
 5. Repeats (int) = 5 
-6. New kappa (int) = 0 no host control, new kappa > 1 with host control 
+6. Updated kappa (int) = default is "0", and if change kappa is true then update to either 0, or change kappa > 1 with host control 
 7. Path to save (string) 
 
 The output for all microbial communities will be saved as a numpy (.npz) file, and named based on each microbial community specific parameters. The data
