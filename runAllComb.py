@@ -1,3 +1,4 @@
+
 #/Users/eemanabbasi/anaconda/bin/python
 
 import os
@@ -17,24 +18,28 @@ import itertools
 import sys
 import warnings
 
-
 def main():
 
+    #Command line arguments 
+    kappa = sys.argv[0]
+    immune_microbial_load = sys.argv[1]
+    immuneResponse = sys.argv[2]
+    change_kappa = sys.argv[2]
+    repeats = sys.argv[3]
+    new_kappa = sys.argv[4]
+    path_to_save = sys.argv[5]
 
-    repeats = 5
-    path_to_save = '/Users/eemanabbasi/Desktop/Comm_Dynamics_Results' 
+    #repeats = 5
+    #path_to_save = '/Users/eemanabbasi/Desktop/Comm_Dynamics_Results' 
+
+
     for j in range(0,repeats):
         print("Now running for repeat: ", j)
-        """
-        Create combinations of parameters and simulate communities.
-        Takes an index from 0 to 593 as an argument. This index determines the
-        parameter values that are used to create the community.
-        """
+
         # create lists all possible parameter values for Pc, Pm, C, h
         list_Pc = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.9,1.0]
         list_Pm = [0,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.9,1.0]
     
-
         # create array of all possible combinations, subject to normalization
         numcombo = len(list_Pc) * len(list_Pm)
         combo = list(itertools.product(list_Pc, list_Pm)) # all possible combinations
@@ -47,12 +52,13 @@ def main():
 
         fullcombo = list(itertools.product(combo))
 
+
         for i in fullcombo:
             params = i 
             Pc = params[0][0]
             Pm = params[0][1]
             print("Now running for comb: ", Pc, Pm)
-            run_simulation(Pc,Pm,0,10000,False,False,0,j,path_to_save) # 1. rmax, 2. Microbial Load
+            run_simulation(Pc,Pm,kappa,immune_microbial_load,immuneResponse,change_kappa,new_kappa,repeats,path_to_save) # 1. rmax, 2. Microbial Load
 
     return
 
