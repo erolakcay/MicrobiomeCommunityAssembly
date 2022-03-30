@@ -35,7 +35,7 @@ class Community(object):
 	is initialized by passing in eleven mandatory parameters and some optional parameters.
 	"""
 
-	def __init__(self, C, Pc, Pm, h, kappa,immune_microbial_load, immuneResponse,change_kappa,new_kappa,repeat_num,path_to_save,plotbool=False, plot_failed_eq=False,
+	def __init__(self, C, Pc, Pm, h, kappa,immune_microbial_load, immuneResponse,change_kappa,new_kappa,path_to_save,plotbool=False, plot_failed_eq=False,
 				 study_selection=False, relative_eq_criteria=False,
 				 IIM_bool = False, VUM_bool=False,
 				 lamb = 0.5):
@@ -57,7 +57,6 @@ class Community(object):
 			lamb (float): uniqueness coefficient (lambda) in the VUM
 			immuneResponse (boolean): indicates if the community is exposed to host immune control
 			kappa (int): the host immune control strength, or constraint on microbial species growth
-			repeat_num (int): the number repeat simulation runs for a given microbial community 
 			change_kappa (boolean): determines whether the kappa value will be updated once the microbial community has reached the steady state 
 			new_kappa (int): new kappa value imposed on the microbial community 
 			original_kappa (int): the kappa value that the microbial community is exposed to at the start of the simualtion. 
@@ -78,7 +77,6 @@ class Community(object):
 		self.lamb = lamb
 		self.immuneResponse = immuneResponse
 		self.kappa = kappa
-		self.repeat_num = repeat_num
 		self.change_kappa = change_kappa
 		self.new_kappa = new_kappa
 		self.original_kappa = self.kappa
@@ -130,6 +128,8 @@ class Community(object):
 		self.exploitative_invasion_condition_negative = [] #list of exploitative invasion coefficent scaled by exploitated species abundance in the community 
 		self.popSteady = [] #list of community population at steady state 
 		self.hostControl = 0 #global host immune control imposed on the community 
+		self.start_eq = 0  
+		self.kappa_eq = True #set to false when equlibria == 1500 and change_kappa == True to allow community to reach equilbrium. 
 		
 
 
@@ -141,13 +141,13 @@ class Community(object):
 		#self.sample_exp_int = 0
 
 		# variables to be saved once an invasion event occurs 
-		#self.extinct_inv = [] 
-		#self.host_control_inv = [] 
-		#self.comm_pop = [] 
-		#self.A_comp_beforeInv =[]  
-		#self.A_mut_beforeInv = []
-		#self.A_comp_afterInv = []
-		#self.A_mut_afterInv = []
+		self.extinct_inv = [] 
+		self.host_control_inv = [] 
+		self.comm_pop = [] 
+		self.A_comp_beforeInv =[]  
+		self.A_mut_beforeInv = []
+		self.A_comp_afterInv = []
+		self.A_mut_afterInv = []
 
 
 		# initializing the community property variables for the microbial community/we use these for plotting 
@@ -171,9 +171,7 @@ class Community(object):
 		self.failed_invasions = [] # list of mean of failedinvasiontimes
 		self.pop_size_steady = [] # list of mean of popSteady
 
-		self.start_eq = 0  
-		self.kappa_eq = True #set to false when equlibria == 1500 and change_kappa == True to allow community to reach equilbrium. 
-	
+		
 
 
 		if plotbool:
@@ -752,8 +750,9 @@ class Community(object):
 
 						self.commProperty() # append the last 500 simuulations results 
 
-						if(i==3500):
-							np.savez(self.path_to_save+'/last_500_simm/output_'+str(self.repeat_num) +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat),\
+						if(i==3500):							
+
+							np.savez(self.path_to_save+'/last_500_simm/'+'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat),\
 							species_list = np.mean(self.species_list), invasion_steady = np.mean(self.invasion_steady),inv_entire = np.mean(self.inv_entire),\
 							extinction_steady = np.mean(self.extinction_steady), extinction_entire = np.mean(self.extinction_entire), mean_species_persistence = np.mean(self.mean_species_persistence),\
 							median_species_persistence = np.mean(self.median_species_persistence), growth_rate = np.mean(self.growth_rate), pop_size_steady = np.mean(self.pop_size_steady),\
@@ -775,7 +774,7 @@ class Community(object):
 		if self.steady == True:
 			self.ages_steady.extend(len(self.eqs) - self.introtime)
 		print(self.steady, self.steadytime)
-		self.output(self.path_to_save+ '/final_community/output_') # check if this saving for the final population. 
+		self.output(self.path_to_save+ '/final_community/') # check if this saving for the final population. 
 		
 
 
@@ -787,7 +786,7 @@ class Community(object):
 		steadyarray = np.array([self.steady])
 		waitarray = np.array([self.wait])
 		aftersteady = np.array([self.extinctionsteady, self.failedinvasionsteady, self.num_invasions_steady, self.numspeciesatsteady])
-		np.savez(location +str(self.repeat_num) +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat),\
+		np.savez(location +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat),\
 				 paramvals = paramvals, population = self.population,\
 				 failedinvasiontimes=self.failedinvasiontimes, extinctiontimes = self.extinctiontimes,\
 				 eqs = self.eqs, numspecies_eq = self.numspecies_eq, broken=brokenarray, \
@@ -811,7 +810,7 @@ class Community(object):
 		steadyarray = np.array([self.steady])
 		waitarray = np.array([self.wait])
 		aftersteady = np.array([self.extinctionsteady, self.failedinvasionsteady, self.num_invasions_steady, self.numspeciesatsteady])
-		np.savez(location +str(self.repeat_num) +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat),\
+		np.savez(location +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat),\
 				 paramvals = paramvals, population = self.population,\
 				 failedinvasiontimes=self.failedinvasiontimes, extinctiontimes = self.extinctiontimes,\
 				 eqs = self.eqs, numspecies_eq = self.numspecies_eq, broken=brokenarray, \
@@ -840,7 +839,7 @@ class Community(object):
 		ax.set_ylabel('Species richness')
 		ax.set_xlabel('Equilibria')
 		ax.set_title(r'C = %.1f, $P_c = $ %.1f, $P_m = $%.1f' %(self.C, self.Pc, self.Pm))
-		fig.savefig(self.path_to_save+'/Species_eqNum/output_'+str(self.repeat_num) +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat)+'.eps')
+		fig.savefig(self.path_to_save+'/Species_eqNum/' +'/output_'+str(self.kappa)+'_'+str(self.new_kappa)+"_"+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat)+'.eps')
 
 	def plot_dynamics(self):
 		"""
@@ -860,7 +859,7 @@ class Community(object):
 		ax.set_ylabel('Population size')
 		ax.set_xlabel('Time')
 		ax.set_title(r'C = %.1f, $P_c = $ %.1f, $P_m = $%.1f' %(self.C, self.Pc, self.Pm))
-		fig.savefig(self.path_to_save+'/Population/output_'+str(self.repeat_num)+'/output_'+str(self.iterationslimit)+'_'+str(self.C)+'_'\
+		fig.savefig(self.path_to_save+'/Population/'+'/output_'+str(self.iterationslimit)+'_'+str(self.C)+'_'\
 					+str(self.Pc)+'_'+str(self.Pm)+str(self.halfsat)+'.eps')
 
 	def plot_dynamics_single_eq(self):
@@ -880,7 +879,7 @@ class Community(object):
 		ax.set_ylabel('Population size')
 		ax.set_xlabel('Time')
 		ax.set_title(r'C = %.1f, $P_c = $ %.1f, $P_m = $%.1f, h = %.1f' %(self.C, self.Pc, self.Pm, self.halfsat))
-		fig.savefig(self.path_to_save+'/Failed-eq/output_'+str(self.repeat_num)+'/output_'+str(self.failed_eq_counter)+'_'+str(self.iterationslimit)+'_'+str(self.C)+'_'\
+		fig.savefig(self.path_to_save+'/Failed-eq/'+'/output_'+str(self.failed_eq_counter)+'_'+str(self.iterationslimit)+'_'+str(self.C)+'_'\
 					+str(self.Pc)+'_'+str(self.Pm)+'_'+str(self.halfsat)+'.eps')
 		
 	def num_interactions(self):
@@ -936,10 +935,10 @@ class Community(object):
 
 
 	#def sample_interactions(self):
-		"""
-		Function to perfom a weighted walk and sample the type of microbial interactions among the 
-		chosen species and its most weighted neighbor. 
-		"""
+		#"""
+		#Function to perfom a weighted walk and sample the type of microbial interactions among the 
+		#chosen species and its most weighted neighbor. 
+		#"""
 
 		# create an adjacency matrix with only ones and zero 
 		#make copies of A and pop_size
@@ -1032,24 +1031,67 @@ class Community(object):
 
 		   
 	
-def run_simulation(Pc,Pm,kappa,immune_microbial_load,immuneResponse,change_kappa,new_kappa,repeat_num,path_to_save):
+def run_simulation(Pc,Pm,kappa,immune_microbial_load,immuneResponse,change_kappa,new_kappa,path_to_save):
 	"""
-	Create combinations of parameters and simulate communities.
-	Takes an index from 0 to 593 as an argument. This index determines the
-	parameter values that are used to create the community.
+	Takes in the command line paramerers from the runAllComb.py script,
+	and uses those values to create a microbial community. 
 	"""
 	# create lists all possible parameter values for Pc, Pm, C, h
 	h = 100
 	C = 0.5
-	
 
-	simulation = Community(C, Pc, Pm, h, kappa,immune_microbial_load, immuneResponse,change_kappa,new_kappa,repeat_num,path_to_save,study_selection=False, IIM_bool = False,
+	
+    #repeats = 5
+    #path_to_save = '/Users/eemanabbasi/Desktop/Comm_Dynamics_Results' 
+
+
+    
+
+	simulation = Community(C, Pc, Pm, h, kappa,immune_microbial_load, immuneResponse,change_kappa,new_kappa,path_to_save,study_selection=False, IIM_bool = False,
 						   VUM_bool = False, lamb=0.5)
 	simulation.start()
 	simulation.iterate()
-	simulation.plot_richness()
+	#simulation.plot_richness()
 	#simulation.plot_dynamics()
 	#simulation.num_interactions()
 	#simulation.sample_interactions()
 
 	return
+
+
+def main():
+
+	kappa = int(sys.argv[1])
+	immune_microbial_load = int(sys.argv[2])
+	immuneResponse = sys.argv[3]
+	change_kappa = sys.argv[4]
+	new_kappa = int(sys.argv[5])
+	path_to_save = sys.argv[-1]
+
+	# create lists all possible parameter values for Pc, Pm, C, h
+	list_Pc = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.9,1.0]
+	list_Pm = [0,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.9,1.0]
+
+	# create array of all possible combinations, subject to normalization
+	numcombo = len(list_Pc) * len(list_Pm)
+	combo = list(itertools.product(list_Pc, list_Pm)) # all possible combinations
+	checknorm = []
+	for i in range(0,numcombo): # need to check normalization
+	    checknorm.append(combo[i][0] + combo[i][1] <= 1)
+	combo=np.array(combo)
+	checknorm=np.array(checknorm)
+	combo = combo[checknorm] # mask combo so that normalization is ensured
+
+	fullcombo = list(itertools.product(combo))
+
+
+	for i in fullcombo:
+	    params = i 
+	    Pc = params[0][0]
+	    Pm = params[0][1]
+	    print("Now running for comb: ", Pc, Pm)
+	    run_simulation(Pc,Pm,kappa,immune_microbial_load,immuneResponse,change_kappa,new_kappa,path_to_save) 
+	return 
+
+main()
+
