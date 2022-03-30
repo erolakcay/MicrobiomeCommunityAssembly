@@ -6,13 +6,13 @@ Eeman Abbasi and Erol Akçay, 2022.
 The python script "microb_comb.py" simulates all possible microbial communities each with a unique combination of Pm, Pe, Pc ecological interaction types. 
 The script can be run on command line and takes in seven command line arguments:
 
-1. Kappa (int) = 0 no host control, kappa > 1 with host control 
-2. Immune microbial load (int)  = 10000
-3. Immune response (boolean) = True/False
-4. Change kappa (boolean) = True/False
-5. Repeats (int) = 5 
-6. Updated kappa (int) = default value 99, if change kappa is true then update to 0 (no host immune control),or > 1 (with host immune control)
-7. Path to save (string) 
+1. kappa (int) = 0 no host control, kappa > 0 with host control 
+2. immune_microbial_load (int)  = 10000
+3. immune_response (boolean) = True/False
+4. change_kappa (boolean) = True/False
+5. num_repeats (int) = 5 
+6. updated_kappa (int) = default value 99, if change kappa is true then update to 0 (no host immune control),or > 1 (with host immune control)
+7. path_to_save (string) 
 
 Create two folders in the path designated to save:
 a) "last_500_simm": saves an average of community ecological properties for the last 500 simulations. 
