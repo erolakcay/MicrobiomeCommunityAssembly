@@ -14,7 +14,7 @@ The "runAllComb.py" script can be run on command line and takes in seven command
 6. Updated kappa (int) = default value 99, if change kappa is true then update to 0 (no host immune control),or > 1 (with host immune control)
 7. Path to save (string) 
 
-Create two folders in the path designated to save: 
+Create two folders in the path designated to save:
 a) "last_500_simm": saves an avaergae of community properties for the last 500 simulations. 
 b) "final_community":  saves the community properties of the last simulation 
 
