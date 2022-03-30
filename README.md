@@ -15,7 +15,7 @@ The "runAllComb.py" script can be run on command line and takes in seven command
 7. Path to save (string) 
 
 Create two folders in the path designated to save:
-a) "last_500_simm": saves an avaergae of community properties for the last 500 simulations. 
-b) "final_community":  saves the community properties of the last simulation 
+a) "last_500_simm": saves an average of community ecological properties for the last 500 simulations. 
+b) "final_community":  saves the community ecological properties of the last simulation 
 
 The output for all microbial communities will be saved as a numpy (.npz) file to the designated path , and will be named based on each microbial community specific parameters. The data from the simulations is used to generate the figures presented in the manuscript. 
