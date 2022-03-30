@@ -3,7 +3,7 @@
 The code is for simulation runs from "Host control and species interactions jointly determine microbiome community structure" by 
 Eeman Abbasi and Erol Akçay, 2022.
 
-The python script "microb_comb.py" simulates all possible microbial communities each with a its own combination of Pm, Pe, Pc ecological interaction types. 
+The python script "microb_comb.py" simulates all possible microbial communities each with a unique combination of Pm, Pe, Pc ecological interaction types. 
 The script can be run on command line and takes in seven command line arguments:
 
 1. Kappa (int) = 0 no host control, kappa > 1 with host control 
