@@ -1,7 +1,3 @@
-Here's an updated README for the script, incorporating the details you provided:
-
----
-
 # MicrobiomeCommunityAssembly
 
 ## Overview
