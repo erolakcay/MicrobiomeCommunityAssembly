@@ -89,4 +89,3 @@ The simulation outputs can be used to generate the figures presented in the manu
 For questions, please contact the authors. 
 ---
 
-This README provides a clear explanation of the simulation process, its purpose, and the expected outputs. Let me know if you need any additional details!
